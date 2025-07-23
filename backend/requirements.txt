@@ -1,0 +1,58 @@
+# AI Test Automation Platform - Backend Requirements
+
+# Core FastAPI and server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Templates and static files
+jinja2==3.1.2
+aiofiles==23.2.1
+
+# Azure OpenAI and AI Libraries
+openai>=1.12.0
+azure-identity>=1.15.0
+azure-core>=1.29.5
+
+# HTTP requests and authentication
+requests>=2.31.0
+httpx>=0.25.2
+
+# Browser Automation
+playwright>=1.40.0
+selenium>=4.15.0
+
+# Data Models and Validation
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Configuration Management
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# Async and utilities
+asyncio-throttle>=1.0.2
+
+# Testing
+pytest>=7.4.3
+pytest-playwright>=0.4.3
+
+# CLI and UI
+typer>=0.9.0
+rich>=13.7.0
+
+# Utilities
+aiofiles>=23.2.1
+asyncio-throttle>=1.0.2
+jinja2>=3.1.2
+
+# Web Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+jinja2>=3.1.2
+python-multipart>=0.0.6
+
+# Development and Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+black>=23.11.0

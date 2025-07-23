@@ -1,0 +1,158 @@
+{
+  "workflow_id": "fabric_settings_workflow",
+  "workflow_name": "Fabric Settings Workflow",
+  "description": "Navigate to fabric settings page, search for fabric by name, and take screenshot if found",
+  "category": "fabric",
+  "estimated_duration": 30,
+  "dependencies": [
+    "login_flow"
+  ],
+  "fields": [
+    {
+      "field_id": "fabric_name",
+      "label": "Fabric Name",
+      "type": "text",
+      "required": true,
+      "default_value": "Test-Fabric-001",
+      "description": "Name of the fabric to search for and view settings",
+      "validation": {
+        "pattern": "^[a-zA-Z0-9_-]+$",
+        "max_length": 64,
+        "min_length": 1
+      },
+      "options": null
+    },
+    {
+      "field_id": "timeout",
+      "label": "Timeout (seconds)",
+      "type": "number",
+      "required": false,
+      "default_value": 30,
+      "description": "Maximum time to wait for page elements",
+      "validation": {
+        "min": 5,
+        "max": 120
+      },
+      "options": null
+    }
+  ],
+  "steps": [
+    {
+      "step_id": 1,
+      "action": "click",
+      "description": "Click on collapsible hamburger menu icon at the top left below the header",
+      "selector": "[data-test='menu-toggle'], .hamburger-menu, .nav-toggle",
+      "value": null,
+      "verification": "Menu panel should open",
+      "critical": true
+    },
+    {
+      "step_id": 2,
+      "action": "click",
+      "description": "Click on 'Provision' button in the menu",
+      "selector": "[data-test='provision-menu'], .menu-item:contains('Provision'), button:contains('Provision')",
+      "value": null,
+      "verification": "Provision submenu should expand",
+      "critical": true
+    },
+    {
+      "step_id": 3,
+      "action": "click",
+      "description": "Click on 'Fabric Sites' option under 'SD Access'",
+      "selector": "[data-test='fabric-sites'], a:contains('Fabric Sites'), .menu-item:contains('Fabric Sites')",
+      "value": null,
+      "verification": "Should navigate to Fabric Sites Summary Page",
+      "critical": true
+    },
+    {
+      "step_id": 4,
+      "action": "verify",
+      "description": "Verify 'SUMMARY' text section is visible",
+      "selector": "[data-test='summary-section'], .summary-header, h2:contains('SUMMARY'), h3:contains('SUMMARY')",
+      "value": null,
+      "verification": "SUMMARY section should be visible",
+      "critical": true
+    },
+    {
+      "step_id": 5,
+      "action": "verify",
+      "description": "Verify numeric value shown above 'Fabric sites' text",
+      "selector": "[data-test='fabric-sites-count'], .count-display, .summary-count",
+      "value": null,
+      "verification": "Fabric sites count should be displayed",
+      "critical": true
+    },
+    {
+      "step_id": 6,
+      "action": "click",
+      "description": "Click on the numeric value or number shown above 'Fabric sites' text",
+      "selector": "[data-test='fabric-sites-count'], .count-display, .summary-count",
+      "value": null,
+      "verification": "Should open fabric sites list",
+      "critical": true
+    },
+    {
+      "step_id": 7,
+      "action": "click",
+      "description": "Click on the specific fabric name from the list",
+      "selector": "[data-test='fabric-name']:contains('{{fabric_name}}'), .fabric-item:contains('{{fabric_name}}'), td:contains('{{fabric_name}}')",
+      "value": "{{fabric_name}}",
+      "verification": "Should navigate to Fabric Infrastructure page",
+      "critical": true
+    },
+    {
+      "step_id": 8,
+      "action": "verify",
+      "description": "Verify 'Fabric Infrastructure' header panel is visible",
+      "selector": "[data-test='fabric-infrastructure'], .fabric-infrastructure-header, h1:contains('Fabric Infrastructure'), h2:contains('Fabric Infrastructure')",
+      "value": null,
+      "verification": "Fabric Infrastructure header should be displayed",
+      "critical": true
+    },
+    {
+      "step_id": 9,
+      "action": "verify",
+      "description": "Verify fabric name is displayed correctly in the page",
+      "selector": "[data-test='fabric-name'], .fabric-title, .page-title:contains('{{fabric_name}}')",
+      "value": "{{fabric_name}}",
+      "verification": "Fabric name should match the searched fabric",
+      "critical": true
+    },
+    {
+      "step_id": 10,
+      "action": "click",
+      "description": "Click 'Settings' header panel button",
+      "selector": "[data-test='settings-tab'], .settings-tab, button:contains('Settings'), a:contains('Settings')",
+      "value": null,
+      "verification": "Should navigate to fabric settings page",
+      "critical": true
+    },
+    {
+      "step_id": 11,
+      "action": "verify",
+      "description": "Verify fabric settings page loads successfully",
+      "selector": "[data-test='fabric-settings'], .settings-panel, .fabric-settings-container",
+      "value": null,
+      "verification": "Settings panel should display configuration details",
+      "critical": true
+    },
+    {
+      "step_id": 12,
+      "action": "screenshot",
+      "description": "Take screenshot of the fabric settings page",
+      "selector": "[data-test='fabric-settings'], .settings-panel, body",
+      "value": "fabric_{{fabric_name}}_settings",
+      "verification": "Screenshot should be captured successfully",
+      "critical": false
+    },
+    {
+      "step_id": 13,
+      "action": "verify",
+      "description": "Verify all fabric configuration parameters are visible and readable",
+      "selector": "[data-test='config-parameters'], .config-item, .setting-row",
+      "value": null,
+      "verification": "All configuration parameters should be visible",
+      "critical": false
+    }
+  ]
+}

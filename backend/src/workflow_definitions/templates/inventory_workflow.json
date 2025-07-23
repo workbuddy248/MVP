@@ -1,0 +1,214 @@
+{
+  "workflow_id": "inventory_workflow",
+  "workflow_name": "Device Inventory Import & Provisioning",
+  "description": "Import devices from file, assign to building, and provision them in Cisco Catalyst Centre",
+  "category": "device_management",
+  "estimated_duration": 1800,
+  "dependencies": ["login_flow", "network_hierarchy"],
+  "fields": [
+    {
+      "field_id": "file_name",
+      "label": "Import File Name",
+      "type": "text",
+      "required": true,
+      "default_value": "devices.csv",
+      "description": "Name of the CSV file containing device information (must be in Downloads folder)",
+      "validation": {
+        "min_length": 3,
+        "max_length": 100,
+        "pattern": ".*\\.(csv|xlsx|xls)$"
+      },
+      "placeholder": "e.g., devices.csv, inventory.xlsx"
+    },
+    {
+      "field_id": "building_name",
+      "label": "Building Name",
+      "type": "text",
+      "required": true,
+      "default_value": "Campus1",
+      "description": "Name of the building where devices will be assigned",
+      "validation": {
+        "min_length": 2,
+        "max_length": 50,
+        "pattern": "^[a-zA-Z0-9_-]+$"
+      },
+      "placeholder": "e.g., Campus1, Headquarters, Branch-Office"
+    },
+    {
+      "field_id": "wait_time",
+      "label": "Assignment Wait Time (seconds)",
+      "type": "number",
+      "required": false,
+      "default_value": "180",
+      "description": "Time to wait for device assignment to complete before provisioning",
+      "validation": {
+        "min": 60,
+        "max": 600
+      }
+    }
+  ],
+  "steps": [
+    {
+      "step_id": 1,
+      "action": "navigate_to_inventory",
+      "description": "Navigate to Provision > Inventory page",
+      "target": "inventory_page",
+      "verification": "Inventory page loads with device list",
+      "critical": true,
+      "selectors": {
+        "hamburger_menu": "button[data-testid='hamburger-menu'], .menu-toggle, .nav-toggle",
+        "provision_menu": "a:contains('Provision'), button:contains('Provision')",
+        "inventory_option": "a:contains('Inventory'), button:contains('Inventory')"
+      }
+    },
+    {
+      "step_id": 2,
+      "action": "check_devices_exist",
+      "description": "Check if devices already exist in inventory",
+      "target": "device_verification",
+      "verification": "Determine if device import is needed",
+      "critical": true,
+      "conditional": true,
+      "selectors": {
+        "device_table": ".device-table, .inventory-table, [data-testid='device-list']",
+        "empty_state": ":contains('No devices found'), .empty-inventory"
+      }
+    },
+    {
+      "step_id": 3,
+      "action": "import_devices",
+      "description": "Import devices from file if not already present",
+      "target": "device_import",
+      "verification": "Devices imported successfully from {{file_name}}",
+      "critical": true,
+      "conditional": "if_devices_not_exist",
+      "selectors": {
+        "add_device_button": "button:contains('+Add device'), button:contains('Add Device'), [data-testid='add-device-btn']",
+        "import_inventory": "button:contains('Import Inventory'), a:contains('Import Inventory')",
+        "file_upload_area": ":contains('Click or drag file'), .upload-area, input[type='file']",
+        "file_input": "input[type='file']",
+        "next_button": "button:contains('Next'), [data-testid='next-btn']",
+        "import_button": "button:contains('Import Devices'), button:contains('Import')",
+        "success_message": ":contains('Done!'), :contains('Devices imported successfully')",
+        "view_inventory_button": "button:contains('View Inventory')"
+      }
+    },
+    {
+      "step_id": 4,
+      "action": "assign_devices_to_site",
+      "description": "Assign imported devices to the specified building",
+      "target": "device_assignment",
+      "verification": "Devices assigned to {{building_name}} successfully",
+      "critical": true,
+      "selectors": {
+        "select_all_checkbox": "input[type='checkbox'][data-testid='select-all'], .select-all-checkbox",
+        "actions_button": "button:contains('Actions'), [data-testid='actions-btn']",
+        "provision_dropdown": "button:contains('Provision'), a:contains('Provision')",
+        "assign_to_site": "button:contains('Assign device to Site'), a:contains('Assign device to Site')",
+        "choose_site_button": "button:contains('choose a site'), [data-testid='choose-site']",
+        "site_expansion": ".expand-arrow, .hierarchy-expand",
+        "building_selection": ".hierarchy-node:contains('{{building_name}}'), [data-testid*='{{building_name}}']",
+        "save_button": "button:contains('Save'), [data-testid='save-btn']",
+        "next_button": "button:contains('Next'), [data-testid='next-btn']",
+        "now_option": "input[value='Now'], :contains('Now')[type='radio']",
+        "assign_button": "button:contains('Assign'), [data-testid='assign-btn']",
+        "submit_button": "button:contains('Submit'), [data-testid='submit-btn']"
+      }
+    },
+    {
+      "step_id": 5,
+      "action": "wait_for_assignment",
+      "description": "Wait for device assignment to complete",
+      "target": "assignment_completion",
+      "verification": "Device assignment process completed",
+      "critical": true,
+      "wait_duration": "{{wait_time}}",
+      "selectors": {
+        "assignment_status": ".assignment-status, [data-testid='assignment-progress']"
+      }
+    },
+    {
+      "step_id": 6,
+      "action": "provision_devices",
+      "description": "Provision the assigned devices",
+      "target": "device_provisioning",
+      "verification": "Device provisioning initiated with 'Task Submitted' message",
+      "critical": true,
+      "selectors": {
+        "select_all_checkbox": "input[type='checkbox'][data-testid='select-all'], .select-all-checkbox",
+        "actions_button": "button:contains('Actions'), [data-testid='actions-btn']",
+        "provision_dropdown": "button:contains('Provision'), a:contains('Provision')",
+        "provision_device": "button:contains('Provision Device'), a:contains('Provision Device')",
+        "next_button": "button:contains('Next'), [data-testid='next-btn']",
+        "now_option": "input[value='Now'], :contains('Now')[type='radio']",
+        "apply_button": "button:contains('Apply'), [data-testid='apply-btn']",
+        "task_submitted": ":contains('Task Submitted'), .task-success"
+      }
+    },
+    {
+      "step_id": 7,
+      "action": "verify_provisioning",
+      "description": "Verify device provisioning process has started",
+      "target": "provisioning_verification",
+      "verification": "Provisioning process successfully initiated",
+      "critical": true,
+      "selectors": {
+        "provisioning_status": ".provisioning-status, [data-testid='provisioning-progress']",
+        "task_queue": ".task-queue, [data-testid='task-status']"
+      }
+    }
+  ],
+  "dependency_questions": [
+    {
+      "question": "Does the network hierarchy and building already exist?",
+      "field": "hierarchy_exists",
+      "type": "boolean",
+      "default": false,
+      "if_false": "include_network_hierarchy"
+    },
+    {
+      "question": "Is the device import file ready in Downloads folder?",
+      "field": "file_ready",
+      "type": "boolean",
+      "default": true,
+      "if_false": "show_file_preparation_steps"
+    }
+  ],
+  "global_fields": [
+    {
+      "field_id": "target_url",
+      "label": "Target URL",
+      "type": "url",
+      "required": true,
+      "default_value": "https://catalyst.cisco.com",
+      "description": "Cisco Catalyst Centre URL",
+      "validation": {
+        "pattern": "^https?://.*"
+      }
+    },
+    {
+      "field_id": "username",
+      "label": "Username",
+      "type": "text",
+      "required": true,
+      "default_value": "admin",
+      "description": "Login username",
+      "validation": {
+        "min_length": 3,
+        "max_length": 50
+      }
+    },
+    {
+      "field_id": "password",
+      "label": "Password",
+      "type": "password",
+      "required": true,
+      "default_value": "admin123",
+      "description": "Login password",
+      "validation": {
+        "min_length": 6,
+        "max_length": 255
+      }
+    }
+  ]
+}

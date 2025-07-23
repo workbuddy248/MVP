@@ -1,0 +1,158 @@
+{
+  "workflow_id": "fabric_creation_workflow.tdd",
+  "workflow_name": "Fabric Creation Workflow.Tdd",
+  "description": "Automated test for Fabric Creation Workflow.Tdd",
+  "category": "fabric",
+  "estimated_duration": 300,
+  "dependencies": [
+    "network_hierarchy",
+    "authentication"
+  ],
+  "fields": [
+    {
+      "field_id": "target_url",
+      "label": "Target URL",
+      "type": "url",
+      "required": true,
+      "default_value": "https://catalyst.cisco.com",
+      "description": "Cisco Catalyst Centre URL",
+      "validation": {
+        "pattern": "^https?://.*"
+      },
+      "options": null
+    },
+    {
+      "field_id": "username",
+      "label": "Username",
+      "type": "text",
+      "required": true,
+      "default_value": "admin",
+      "description": "Login username",
+      "validation": {
+        "min_length": 3,
+        "max_length": 50
+      },
+      "options": null
+    },
+    {
+      "field_id": "password",
+      "label": "Password",
+      "type": "password",
+      "required": true,
+      "default_value": "admin123",
+      "description": "Login password",
+      "validation": {
+        "min_length": 6
+      },
+      "options": null
+    },
+    {
+      "field_id": "s",
+      "label": "S",
+      "type": "text",
+      "required": true,
+      "default_value": "required: [building_name, device_group_name_in_order, device_group_counts]",
+      "description": "Value for s",
+      "validation": {
+        "min_length": 1,
+        "max_length": 255
+      },
+      "options": null
+    },
+    {
+      "field_id": "creation_dependencies",
+      "label": "Creation\nDependencies",
+      "type": "dropdown",
+      "required": true,
+      "default_value": "login_flow, network_hierarchy_creation, inventory_workflow",
+      "description": "Value for creation\ndependencies",
+      "validation": {},
+      "options": null
+    },
+    {
+      "field_id": "required",
+      "label": "Required",
+      "type": "text",
+      "required": true,
+      "default_value": "building_name, device_group_name_in_order, device_group_counts",
+      "description": "Value for required",
+      "validation": {
+        "min_length": 1,
+        "max_length": 255
+      },
+      "options": null
+    },
+    {
+      "field_id": "optional",
+      "label": "Optional",
+      "type": "text",
+      "required": true,
+      "default_value": "timeout, bgp_asn, area_name",
+      "description": "Value for optional",
+      "validation": {
+        "min_length": 1,
+        "max_length": 255
+      },
+      "options": null
+    },
+    {
+      "field_id": "fabric_name",
+      "label": "Fabric Name",
+      "type": "text",
+      "required": true,
+      "default_value": "Test-Fabric-001",
+      "description": "Name for the network fabric",
+      "validation": {
+        "pattern": "^[a-zA-Z0-9_-]+$",
+        "max_length": 64
+      },
+      "options": null
+    },
+    {
+      "field_id": "bgp_asn",
+      "label": "BGP ASN",
+      "type": "number",
+      "required": true,
+      "default_value": "65001",
+      "description": "BGP Autonomous System Number",
+      "validation": {
+        "min": 1,
+        "max": 65535
+      },
+      "options": null
+    },
+    {
+      "field_id": "group_name",
+      "label": "Device Group Name",
+      "type": "text",
+      "required": true,
+      "default_value": "Test-Group-001",
+      "description": "Name for the device group",
+      "validation": {
+        "pattern": "^[a-zA-Z0-9_-]+$",
+        "max_length": 64
+      },
+      "options": null
+    }
+  ],
+  "steps": [
+    {
+      "step_id": 180,
+      "action": "wait",
+      "description": "parameters:",
+      "selector": "",
+      "value": null,
+      "verification": "Expected condition is met",
+      "critical": false
+    },
+    {
+      "step_id": 1200,
+      "action": "wait",
+      "description": "in BGP ASN textbox",
+      "selector": "",
+      "value": null,
+      "verification": "Expected condition is met",
+      "critical": false
+    }
+  ]
+}

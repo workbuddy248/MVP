@@ -1,0 +1,124 @@
+{
+  "workflow_id": "create_fabric.tdd",
+  "workflow_name": "text:required] - Unique identifier for the fabric",
+  "description": "Automated test for text:required] - Unique identifier for the fabric",
+  "category": "fabric",
+  "estimated_duration": 300,
+  "dependencies": [
+    "network_hierarchy",
+    "authentication"
+  ],
+  "fields": [
+    {
+      "field_id": "target_url",
+      "label": "Target URL",
+      "type": "url",
+      "required": true,
+      "default_value": "https://catalyst.cisco.com",
+      "description": "Cisco Catalyst Centre URL",
+      "validation": {
+        "pattern": "^https?://.*"
+      },
+      "options": null
+    },
+    {
+      "field_id": "username",
+      "label": "Username",
+      "type": "text",
+      "required": true,
+      "default_value": "admin",
+      "description": "Login username",
+      "validation": {
+        "min_length": 3,
+        "max_length": 50
+      },
+      "options": null
+    },
+    {
+      "field_id": "password",
+      "label": "Password",
+      "type": "password",
+      "required": true,
+      "default_value": "admin123",
+      "description": "Login password",
+      "validation": {
+        "min_length": 6
+      },
+      "options": null
+    },
+    {
+      "field_id": "fabric_name",
+      "label": "Fabric Name",
+      "type": "text",
+      "required": true,
+      "default_value": "`{fabric_name}`",
+      "description": "Value for fabric name",
+      "validation": {
+        "min_length": 1,
+        "max_length": 255,
+        "pattern": "^[a-zA-Z0-9_-]+$"
+      },
+      "options": null
+    },
+    {
+      "field_id": "bgp_asn",
+      "label": "BGP ASN",
+      "type": "number",
+      "required": true,
+      "default_value": "65001",
+      "description": "BGP Autonomous System Number",
+      "validation": {
+        "min": 1,
+        "max": 65535
+      },
+      "options": null
+    }
+  ],
+  "steps": [
+    {
+      "step_id": 1,
+      "action": "navigate",
+      "description": "Navigate to Fabric Management",
+      "selector": "",
+      "value": null,
+      "verification": "Page loads successfully and expected elements are visible",
+      "critical": true
+    },
+    {
+      "step_id": 2,
+      "action": "click",
+      "description": "Create New Fabric",
+      "selector": "button:contains('Create'), input[value*='Create']",
+      "value": null,
+      "verification": "Element is clicked and expected response occurs",
+      "critical": true
+    },
+    {
+      "step_id": 3,
+      "action": "wait",
+      "description": "Configure Advanced Settings",
+      "selector": "",
+      "value": null,
+      "verification": "Expected condition is met",
+      "critical": false
+    },
+    {
+      "step_id": 4,
+      "action": "verify",
+      "description": "Verify Fabric Creation",
+      "selector": "",
+      "value": null,
+      "verification": "Verify Fabric Creation",
+      "critical": false
+    },
+    {
+      "step_id": 900,
+      "action": "wait",
+      "description": "seconds",
+      "selector": "",
+      "value": null,
+      "verification": "Expected condition is met",
+      "critical": false
+    }
+  ]
+}

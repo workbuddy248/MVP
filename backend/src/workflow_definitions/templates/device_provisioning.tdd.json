@@ -1,0 +1,108 @@
+{
+  "workflow_id": "device_provisioning.tdd",
+  "workflow_name": "Device Provisioning.Tdd",
+  "description": "Automated test for Device Provisioning.Tdd",
+  "category": "device_group",
+  "estimated_duration": 300,
+  "dependencies": [
+    "authentication"
+  ],
+  "fields": [
+    {
+      "field_id": "target_url",
+      "label": "Target URL",
+      "type": "url",
+      "required": true,
+      "default_value": "https://catalyst.cisco.com",
+      "description": "Cisco Catalyst Centre URL",
+      "validation": {
+        "pattern": "^https?://.*"
+      },
+      "options": null
+    },
+    {
+      "field_id": "username",
+      "label": "Username",
+      "type": "text",
+      "required": true,
+      "default_value": "admin",
+      "description": "Login username",
+      "validation": {
+        "min_length": 3,
+        "max_length": 50
+      },
+      "options": null
+    },
+    {
+      "field_id": "password",
+      "label": "Password",
+      "type": "password",
+      "required": true,
+      "default_value": "admin123",
+      "description": "Login password",
+      "validation": {
+        "min_length": 6
+      },
+      "options": null
+    },
+    {
+      "field_id": "device_ip",
+      "label": "Device Ip",
+      "type": "ip",
+      "required": true,
+      "default_value": "`{device_ip}`",
+      "description": "Value for device IP",
+      "validation": {
+        "pattern": "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$"
+      },
+      "options": null
+    }
+  ],
+  "steps": [
+    {
+      "step_id": 1,
+      "action": "navigate",
+      "description": "Navigate to Device Management",
+      "selector": "",
+      "value": null,
+      "verification": "Page loads successfully and expected elements are visible",
+      "critical": true
+    },
+    {
+      "step_id": 2,
+      "action": "wait",
+      "description": "Device Discovery",
+      "selector": "",
+      "value": null,
+      "verification": "Expected condition is met",
+      "critical": false
+    },
+    {
+      "step_id": 3,
+      "action": "wait",
+      "description": "Device Configuration",
+      "selector": "",
+      "value": null,
+      "verification": "Expected condition is met",
+      "critical": false
+    },
+    {
+      "step_id": 4,
+      "action": "verify",
+      "description": "Verify Provisioning",
+      "selector": "",
+      "value": null,
+      "verification": "Verify Provisioning",
+      "critical": false
+    },
+    {
+      "step_id": 1200,
+      "action": "wait",
+      "description": "seconds",
+      "selector": "",
+      "value": null,
+      "verification": "Expected condition is met",
+      "critical": false
+    }
+  ]
+}

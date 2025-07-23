@@ -1,0 +1,203 @@
+{
+  "workflow_id": "network_hierarchy",
+  "workflow_name": "Create Network Hierarchy", 
+  "description": "Sets up the network site hierarchy structure in Cisco Catalyst Centre with Area and Building creation",
+  "category": "network_hierarchy",
+  "estimated_duration": 2700,
+  "dependencies": ["login_flow"],
+  "fields": [
+    {
+      "field_id": "area_name",
+      "label": "Area Name",
+      "type": "text",
+      "required": true,
+      "default_value": "USA",
+      "description": "Name for the geographical area (will be created under Global)",
+      "validation": {
+        "min_length": 2,
+        "max_length": 50,
+        "pattern": "^[a-zA-Z0-9_-]+$"
+      },
+      "placeholder": "e.g., USA, Europe, APAC"
+    },
+    {
+      "field_id": "building_name", 
+      "label": "Building Name",
+      "type": "text",
+      "required": true,
+      "default_value": "Campus1",
+      "description": "Name for the building/campus (will be created under the Area)",
+      "validation": {
+        "min_length": 2,
+        "max_length": 50,
+        "pattern": "^[a-zA-Z0-9_-]+$"
+      },
+      "placeholder": "e.g., Campus1, Headquarters, Branch-Office"
+    },
+    {
+      "field_id": "address",
+      "label": "Building Address",
+      "type": "text",
+      "required": false,
+      "default_value": "Sanjose",
+      "description": "Physical address for the building (optional)",
+      "validation": {
+        "min_length": 3,
+        "max_length": 200
+      },
+      "placeholder": "e.g., Sanjose, New York, London"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": 1,
+      "action": "navigate_to_hierarchy",
+      "description": "Navigate to Design > Network Hierarchy page",
+      "target": "network_hierarchy_page",
+      "verification": "Page loads with 'Global' visible",
+      "critical": true,
+      "selectors": {
+        "hamburger_menu": "button[data-testid='hamburger-menu'], .menu-toggle, .nav-toggle",
+        "design_menu": "a:contains('Design'), button:contains('Design')",
+        "network_hierarchy": "a:contains('Network Hierarchy'), button:contains('Network Hierarchy')"
+      }
+    },
+    {
+      "step_id": 2,
+      "action": "check_area_exists",
+      "description": "Check if Area already exists under Global",
+      "target": "area_verification",
+      "verification": "Determine if area creation is needed",
+      "critical": true,
+      "conditional": true,
+      "selectors": {
+        "global_node": "[data-testid='global-node'], .hierarchy-node:contains('Global')",
+        "area_node": ".hierarchy-node:contains('{{area_name}}'), [data-testid*='{{area_name}}']"
+      }
+    },
+    {
+      "step_id": 3,
+      "action": "create_area",
+      "description": "Create new Area under Global if it doesn't exist",
+      "target": "area_creation",
+      "verification": "Area '{{area_name}}' is created successfully",
+      "critical": true,
+      "conditional": "if_area_not_exists",
+      "selectors": {
+        "global_overflow": "[data-testid='global-overflow'], .overflow-menu:near(.hierarchy-node:contains('Global'))",
+        "add_area_button": "button:contains('Add Area'), [data-testid='add-area-btn']",
+        "area_name_input": "input[name*='area'], input[placeholder*='area'], input[data-testid*='area-name']",
+        "add_button": "button:contains('Add'), button[data-testid='add-btn'], button[type='submit']"
+      },
+      "expected_confirmations": [
+        "Area Added Successfully",
+        "Successfully created area"
+      ]
+    },
+    {
+      "step_id": 4,
+      "action": "expand_global",
+      "description": "Expand Global node to see Areas",
+      "target": "global_expansion",
+      "verification": "Global node is expanded and shows areas",
+      "critical": true,
+      "selectors": {
+        "global_expand": ".expand-arrow:near(.hierarchy-node:contains('Global')), [data-testid='expand-global']"
+      }
+    },
+    {
+      "step_id": 5,
+      "action": "check_building_exists", 
+      "description": "Check if Building already exists under Area",
+      "target": "building_verification",
+      "verification": "Determine if building creation is needed",
+      "critical": true,
+      "conditional": true,
+      "selectors": {
+        "area_node": ".hierarchy-node:contains('{{area_name}}'), [data-testid*='{{area_name}}']",
+        "building_node": ".hierarchy-node:contains('{{building_name}}'), [data-testid*='{{building_name}}']"
+      }
+    },
+    {
+      "step_id": 6,
+      "action": "create_building",
+      "description": "Create new Building under Area if it doesn't exist", 
+      "target": "building_creation",
+      "verification": "Building '{{building_name}}' is created successfully",
+      "critical": true,
+      "conditional": "if_building_not_exists",
+      "selectors": {
+        "area_overflow": "[data-testid*='{{area_name}}-overflow'], .overflow-menu:near(.hierarchy-node:contains('{{area_name}}'))",
+        "add_building_button": "button:contains('Add Building'), [data-testid='add-building-btn']",
+        "building_name_input": "input[name*='building'], input[placeholder*='building'], input[data-testid*='building-name']",
+        "address_input": "input[name*='address'], input[placeholder*='address'], input[data-testid*='address']",
+        "address_dropdown": ".dropdown-item:first, .suggestion-item:first",
+        "add_button": "button:contains('Add'), button[data-testid='add-btn'], button[type='submit']"
+      },
+      "expected_confirmations": [
+        "Site Added Successfully", 
+        "Building created successfully"
+      ]
+    },
+    {
+      "step_id": 7,
+      "action": "verify_hierarchy",
+      "description": "Verify complete hierarchy structure is created",
+      "target": "final_verification",
+      "verification": "Global → {{area_name}} → {{building_name}} hierarchy is visible",
+      "critical": true,
+      "selectors": {
+        "complete_hierarchy": ".hierarchy-tree, .network-hierarchy",
+        "global_node": ".hierarchy-node:contains('Global')",
+        "area_node": ".hierarchy-node:contains('{{area_name}}')",
+        "building_node": ".hierarchy-node:contains('{{building_name}}')"
+      }
+    }
+  ],
+  "dependency_questions": [
+    {
+      "question": "Is this the first time setting up network hierarchy?",
+      "field": "first_time_setup",
+      "type": "boolean", 
+      "default": false,
+      "if_true": "show_setup_tips"
+    }
+  ],
+  "global_fields": [
+    {
+      "field_id": "target_url",
+      "label": "Target URL",
+      "type": "url",
+      "required": true,
+      "default_value": "https://catalyst.cisco.com",
+      "description": "Cisco Catalyst Centre URL",
+      "validation": {
+        "pattern": "^https?://.*"
+      }
+    },
+    {
+      "field_id": "username",
+      "label": "Username", 
+      "type": "text",
+      "required": true,
+      "default_value": "admin",
+      "description": "Login username",
+      "validation": {
+        "min_length": 3,
+        "max_length": 50
+      }
+    },
+    {
+      "field_id": "password",
+      "label": "Password",
+      "type": "password", 
+      "required": true,
+      "default_value": "admin123",
+      "description": "Login password",
+      "validation": {
+        "min_length": 6,
+        "max_length": 255
+      }
+    }
+  ]
+}

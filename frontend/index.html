@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Test Automation Platform</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-robot"></i> AI Test Automation Platform</h1>
+            <p class="subtitle">Intelligent End-to-End Testing with Azure OpenAI</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Test Configuration Section -->
+            <section class="config-section">
+                <h2><i class="fas fa-cog"></i> Test Configuration</h2>
+                <form id="testForm" class="test-form">
+                    <div class="form-group">
+                        <label for="instructions">
+                            <i class="fas fa-comment-dots"></i> Test Instructions
+                        </label>
+                        <textarea 
+                            id="instructions" 
+                            name="instructions" 
+                            placeholder="Describe what you want to test... (e.g., 'test login to the url' - credentials will be added automatically)"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="url">
+                            <i class="fas fa-globe"></i> Target URL
+                        </label>
+                        <input 
+                            type="url" 
+                            id="url" 
+                            name="url" 
+                            placeholder="https://example.com"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username" 
+                                placeholder="Enter username"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                placeholder="Enter password"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="startBtn" class="btn btn-primary" disabled style="opacity: 0.5; cursor: not-allowed;" title="Please fill all required fields">
+                            <i class="fas fa-play"></i> Start Test
+                        </button>
+                        <button type="button" id="pauseBtn" class="btn btn-warning" disabled>
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button type="button" id="resumeBtn" class="btn btn-success" disabled>
+                            <i class="fas fa-play"></i> Resume
+                        </button>
+                        <button type="button" id="stopBtn" class="btn btn-danger" disabled>
+                            <i class="fas fa-stop"></i> Stop
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Execution Status Section -->
+            <section class="status-section">
+                <h2><i class="fas fa-chart-line"></i> Execution Status</h2>
+                <div class="status-card" id="statusCard">
+                    <div class="status-header">
+                        <span class="status-badge" id="statusBadge">Ready</span>
+                        <span class="execution-id" id="executionId"></span>
+                    </div>
+                    <div class="status-content">
+                        <div class="current-step" id="currentStep">Ready to start test execution</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text" id="progressText">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-time Updates Section -->
+            <section class="updates-section">
+                <h2><i class="fas fa-stream"></i> Real-time Updates</h2>
+                <div class="updates-container" id="updatesContainer">
+                    <div class="update-item info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Welcome to AI Test Automation Platform</span>
+                        <small id="welcomeTime"></small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <h2><i class="fas fa-chart-bar"></i> Test Results</h2>
+                <div class="results-container" id="resultsContainer">
+                    <!-- Results will be populated here -->
+                </div>
+            </section>
+
+            <!-- System Status Section -->
+            <section class="system-status">
+                <div class="status-indicators">
+                    <div class="indicator">
+                        <i class="fas fa-server"></i>
+                        <span>Backend: <span id="backendStatus" class="status-unknown">Checking...</span></span>
+                    </div>
+                    <div class="indicator">
+                        <i class="fas fa-brain"></i>
+                        <span>Azure AI: <span id="azureStatus" class="status-unknown">Checking...</span></span>
+                    </div>
+                    <div class="indicator">
+                        <i class="fas fa-link"></i>
+                        <span>WebSocket: <span id="wsStatus" class="status-unknown">Disconnected</span></span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 AI Test Automation Platform. Powered by Azure OpenAI.</p>
+        </footer>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>

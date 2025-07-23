@@ -1,0 +1,63 @@
+# AI E2E Testing Agent Configuration
+
+azure_openai:
+  endpoint: "${AZURE_OPENAI_ENDPOINT}"
+  api_key: "${AZURE_OPENAI_API_KEY}"
+  deployment_name: "gpt-4.1"
+  api_version: "2024-10-21"
+
+application:
+  name: "Legacy Java Application"
+  type: "legacy_java"
+  default_timeout: 30000
+  slow_mo: 1000
+
+browser_config:
+  type: "chromium"
+  headless: true
+  viewport:
+    width: 1920
+    height: 1080
+  context_options:
+    ignore_https_errors: true
+    accept_downloads: false
+  launch_options:
+    slow_mo: 1000
+    args:
+      - "--disable-web-security"
+      - "--ignore-certificate-errors"
+      - "--allow-running-insecure-content"
+
+storage:
+  base_path: "./test_data"
+  results_retention_days: 30
+  enable_compression: false
+
+agents:
+  nl_processor:
+    max_tokens: 1000
+    temperature: 0.1
+  test_strategy:
+    max_tokens: 1500
+    temperature: 0.1
+  test_generation:
+    max_tokens: 2000
+    temperature: 0.1
+  element_detection:
+    max_tokens: 800
+    temperature: 0.2
+  self_healing:
+    max_tokens: 700
+    temperature: 0.2
+
+reporting:
+  enable_console: true
+  enable_html: true
+  enable_screenshots: true
+  screenshot_on_failure: true
+  detailed_logging: true
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_output: "./logs/ai_e2e_agent.log"
