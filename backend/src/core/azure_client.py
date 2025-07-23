@@ -48,8 +48,8 @@ class AzureOpenAIClient:
         self.app_key = os.getenv('APP_KEY') or (config and config.get('app_key'))
         self.deployment_name = os.getenv('AZURE_DEPLOYMENT_NAME', 'gpt-4.1') or (config and config.get('deployment_name', 'gpt-4.1'))
         self.api_version = os.getenv('AZURE_API_VERSION', '2024-07-01-preview') or (config and config.get('api_version', '2024-07-01-preview'))
-        self.api_base = os.getenv('AZURE_ENDPOINT', 'https://chat-ai.cisco.com') or (config and config.get('api_base', 'https://chat-ai.cisco.com'))
-        self.cisco_idp = os.getenv('AZURE_CISCO_IDP', 'https://id.cisco.com/oauth2/default/v1/token')
+        self.api_base = os.getenv('AZURE_ENDPOINT', 'some_endpoint') or (config and config.get('api_base', 'some_endpoint'))
+        self.cisco_idp = os.getenv('AZURE_CISCO_IDP', 'some_idp')
         
         # Validate required credentials
         if not all([self.client_id, self.client_secret, self.app_key]):
