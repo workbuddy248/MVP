@@ -315,7 +315,7 @@ class TestOrchestrator:
         
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         unique_id = str(uuid.uuid4())[:8]
-        return f"exec_{timestamp}_{unique_id}"
+        return f"session_{timestamp}_{unique_id}"
 
     # Public methods for workflow management
     

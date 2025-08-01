@@ -4,155 +4,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Test Automation Platform</title>
-    <link rel="stylesheet" href="static/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <header class="header">
-            <h1><i class="fas fa-robot"></i> AI Test Automation Platform</h1>
-            <p class="subtitle">Intelligent End-to-End Testing with Azure OpenAI</p>
+            <div class="header-content">
+                <h1><i class="fas fa-robot"></i> AI Test Automation Platform</h1>
+                <p>End-to-End Testing with AI</p>
+            </div>
         </header>
 
+        <!-- Main Content -->
         <main class="main-content">
-            <!-- Test Configuration Section -->
-            <section class="config-section">
-                <h2><i class="fas fa-cog"></i> Test Configuration</h2>
-                <form id="testForm" class="test-form">
-                    <div class="form-group">
-                        <label for="instructions">
-                            <i class="fas fa-comment-dots"></i> Test Instructions
-                        </label>
-                        <textarea 
-                            id="instructions" 
-                            name="instructions" 
-                            placeholder="Describe what you want to test... (e.g., 'test login to the url' - credentials will be added automatically)"
-                            required
-                        ></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="url">
-                            <i class="fas fa-globe"></i> Target URL
-                        </label>
-                        <input 
-                            type="url" 
-                            id="url" 
-                            name="url" 
-                            placeholder="https://example.com"
-                            required
-                        />
-                    </div>
-
-                    <div class="form-row">
+            <!-- Test Configuration Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-cog"></i> Test Configuration</h2>
+                </div>
+                <div class="card-body">
+                    <form id="testForm" class="test-form">
+                        <!-- Test Instructions -->
                         <div class="form-group">
-                            <label for="username">
-                                <i class="fas fa-user"></i> Username
+                            <label for="instructions">
+                                <i class="fas fa-comment-dots"></i> Test Instructions
+                            </label>
+                            <textarea 
+                                id="instructions" 
+                                name="instructions" 
+                                placeholder="Describe what you want to test... (e.g., 'test login to the url' or 'test get fabric')"
+                                rows="4"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <!-- Target URL -->
+                        <div class="form-group">
+                            <label for="url">
+                                <i class="fas fa-globe"></i> Target URL
                             </label>
                             <input 
-                                type="text" 
-                                id="username" 
-                                name="username" 
-                                placeholder="Enter username"
+                                type="url" 
+                                id="url" 
+                                name="url" 
+                                placeholder="https://example.com"
                                 required
                             />
                         </div>
 
-                        <div class="form-group">
-                            <label for="password">
-                                <i class="fas fa-lock"></i> Password
-                            </label>
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
-                                placeholder="Enter password"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" id="startBtn" class="btn btn-primary" disabled style="opacity: 0.5; cursor: not-allowed;" title="Please fill all required fields">
-                            <i class="fas fa-play"></i> Start Test
-                        </button>
-                        <button type="button" id="pauseBtn" class="btn btn-warning" disabled>
-                            <i class="fas fa-pause"></i> Pause
-                        </button>
-                        <button type="button" id="resumeBtn" class="btn btn-success" disabled>
-                            <i class="fas fa-play"></i> Resume
-                        </button>
-                        <button type="button" id="stopBtn" class="btn btn-danger" disabled>
-                            <i class="fas fa-stop"></i> Stop
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Execution Status Section -->
-            <section class="status-section">
-                <h2><i class="fas fa-chart-line"></i> Execution Status</h2>
-                <div class="status-card" id="statusCard">
-                    <div class="status-header">
-                        <span class="status-badge" id="statusBadge">Ready</span>
-                        <span class="execution-id" id="executionId"></span>
-                    </div>
-                    <div class="status-content">
-                        <div class="current-step" id="currentStep">Ready to start test execution</div>
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        <!-- Username and Password Row -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="username">
+                                    <i class="fas fa-user"></i> Username
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="username" 
+                                    name="username" 
+                                    placeholder="Enter username"
+                                    required
+                                />
                             </div>
-                            <span class="progress-text" id="progressText">0%</span>
+
+                            <div class="form-group">
+                                <label for="password">
+                                    <i class="fas fa-lock"></i> Password
+                                </label>
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    placeholder="Enter password"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="form-actions">
+                            <button type="button" id="startBtn" class="btn btn-start" disabled>
+                                <i class="fas fa-play"></i> Start Test
+                            </button>
+                            <button type="button" id="pauseBtn" class="btn btn-pause" disabled>
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button type="button" id="resumeBtn" class="btn btn-resume" disabled style="display: none;">
+                                <i class="fas fa-play"></i> Resume
+                            </button>
+                            <button type="button" id="stopBtn" class="btn btn-stop" disabled>
+                                <i class="fas fa-stop"></i> Stop
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Status Cards Row -->
+            <div class="status-row">
+                <!-- Execution Status Card -->
+                <div class="card status-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-line"></i> Execution Status</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-info">
+                            <div class="status-badge" id="executionStatus">Ready</div>
+                            <div class="status-text" id="executionText">Ready to start test execution</div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-text" id="progressText">0%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Real-time Updates Section -->
-            <section class="updates-section">
-                <h2><i class="fas fa-stream"></i> Real-time Updates</h2>
-                <div class="updates-container" id="updatesContainer">
-                    <div class="update-item info">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Welcome to AI Test Automation Platform</span>
-                        <small id="welcomeTime"></small>
+                <!-- Real-time Updates Card -->
+                <div class="card updates-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-stream"></i> Real-time Updates</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="updates-container" id="updatesContainer">
+                            <div class="update-item welcome">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Welcome to AI Test Automation Platform</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Results Section -->
-            <section class="results-section" id="resultsSection" style="display: none;">
-                <h2><i class="fas fa-chart-bar"></i> Test Results</h2>
-                <div class="results-container" id="resultsContainer">
-                    <!-- Results will be populated here -->
-                </div>
-            </section>
-
-            <!-- System Status Section -->
-            <section class="system-status">
-                <div class="status-indicators">
-                    <div class="indicator">
-                        <i class="fas fa-server"></i>
-                        <span>Backend: <span id="backendStatus" class="status-unknown">Checking...</span></span>
-                    </div>
-                    <div class="indicator">
-                        <i class="fas fa-brain"></i>
-                        <span>Azure AI: <span id="azureStatus" class="status-unknown">Checking...</span></span>
-                    </div>
-                    <div class="indicator">
-                        <i class="fas fa-link"></i>
-                        <span>WebSocket: <span id="wsStatus" class="status-unknown">Disconnected</span></span>
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
 
-        <footer class="footer">
-            <p>&copy; 2024 AI Test Automation Platform. Powered by Azure OpenAI.</p>
+        <!-- System Status Bar -->
+        <footer class="status-bar">
+            <div class="status-item">
+                <i class="fas fa-server"></i>
+                <span>Backend: </span>
+                <span id="backendStatus" class="status-indicator checking">Checking...</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-brain"></i>
+                <span>Azure AI: </span>
+                <span id="azureStatus" class="status-indicator checking">Checking...</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-plug"></i>
+                <span>WebSocket: </span>
+                <span id="websocketStatus" class="status-indicator disconnected">Disconnected</span>
+            </div>
         </footer>
+
+        <!-- Copyright -->
+        <div class="copyright">
+            © 2025 AI Test Automation Platform. Developed by Varun Saraf.
+        </div>
     </div>
 
-    <script src="static/script.js"></script>
+    <script src="/static/js/app.js"></script>
 </body>
 </html>

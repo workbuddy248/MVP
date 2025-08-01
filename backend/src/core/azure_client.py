@@ -275,19 +275,31 @@ class PromptTemplates:
     
     @staticmethod
     def nl_processor_prompt() -> str:
-        return """You are an expert at understanding E2E testing requirements for legacy Java web applications.
-Parse user input into structured test intent optimized for applications like Cisco Catalyst Centre.
+        return """You are an expert at understanding E2E testing requirements for Cisco Catalyst Centre applications.
+Parse user input into structured test intent optimized for fabric management and authentication workflows.
 
-Focus on:
-- Login workflows and authentication
-- Navigation patterns in enterprise apps
-- Form interactions and data entry
-- Table-based data verification
-- Modal dialogs and confirmations
+CRITICAL INTENT CLASSIFICATION RULES:
+1. **"get_fabric"** intent takes PRIORITY if ANY of these keywords are present:
+   - fabric, fabric details, fabric name, fabric management
+   - Global/, border_, site_, BLD1, BLD2, etc.
+   - navigate to, view details, show details, display
+   - fabric navigation, fabric section
+   - Any path like "Global/border_l3vn_design_site/BLD1"
+
+2. **"login"** intent ONLY if:
+   - ONLY mentions authentication/login/credentials
+   - NO fabric-related keywords present
+   - Pure authentication workflow
+
+CLASSIFICATION PRIORITY:
+- If instruction contains "fabric" + navigation/details → ALWAYS "get_fabric"
+- If instruction contains fabric paths (Global/...) → ALWAYS "get_fabric" 
+- If instruction mentions viewing/navigating to fabric → ALWAYS "get_fabric"
+- Only classify as "login" if it's pure authentication without fabric context
 
 Output JSON format:
 {
-    "intent_type": "login|navigation|form_interaction|data_verification|workflow",
+    "intent_type": "login|get_fabric",
     "target_application": "brief description",
     "primary_actions": ["action1", "action2", "action3"],
     "test_objectives": ["objective1", "objective2"],
@@ -296,6 +308,12 @@ Output JSON format:
     "requires_authentication": boolean,
     "ui_patterns_expected": ["tables", "forms", "modals", "navigation"]
 }
+
+EXAMPLES:
+- "login to app, navigate to fabric details" → get_fabric
+- "view fabric Global/border_l3vn_design_site/BLD1" → get_fabric  
+- "show fabric details for BLD1" → get_fabric
+- "login with username and password" → login
 
 Be specific and actionable. Focus on what can actually be automated."""
     

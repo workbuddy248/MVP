@@ -5,6 +5,7 @@ Automatic error recovery and test adaptation
 """
 
 import logging
+import time
 from typing import Dict, Any, List
 from playwright.async_api import Page
 from ..core.azure_client import AzureOpenAIClient
@@ -39,23 +40,24 @@ class SelfHealingAgent:
         logger.info(f"Attempting self-healing for step: {failed_step.get('description')}")
         logger.info(f"Error: {error}")
         
-        start_time = page.clock.now() if hasattr(page, 'clock') else 0
+        # Use standard Python time measurement for reliability
+        start_time = time.time()
         
         # Strategy 1: Basic retry patterns
         healing_result = await self._try_basic_healing(page, failed_step, error)
         if healing_result.success:
-            healing_result.healing_time = (page.clock.now() if hasattr(page, 'clock') else 0) - start_time
+            healing_result.healing_time = time.time() - start_time
             return healing_result
         
         # Strategy 2: Page state analysis and correction
         healing_result = await self._try_page_state_healing(page, failed_step, error)
         if healing_result.success:
-            healing_result.healing_time = (page.clock.now() if hasattr(page, 'clock') else 0) - start_time
+            healing_result.healing_time = time.time() - start_time
             return healing_result
         
         # Strategy 3: AI-powered recovery
         healing_result = await self._try_ai_healing(page, failed_step, error)
-        healing_result.healing_time = (page.clock.now() if hasattr(page, 'clock') else 0) - start_time
+        healing_result.healing_time = time.time() - start_time
         
         return healing_result
     

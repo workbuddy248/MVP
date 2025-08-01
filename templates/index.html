@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E2E Testing Agent</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <h1>E2E Testing Agent</h1>
+                </div>
+                <p class="subtitle">Transform natural language commands into automated Playwright tests</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Test Configuration Section -->
+            <section class="config-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> Test Configuration</h2>
+                </div>
+
+                <form id="testForm" class="test-form">
+                    <!-- Test Mode Selection -->
+                    <div class="form-group full-width">
+                        <label>
+                            <i class="fas fa-cog"></i>
+                            Test Mode
+                        </label>
+                        <div class="mode-toggle">
+                            <label class="radio-label">
+                                <input type="radio" name="testMode" value="workflow" id="workflowMode" checked>
+                                <span class="radio-custom"></span>
+                                <i class="fas fa-sitemap"></i>
+                                Workflow Templates
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="testMode" value="freeform" id="freeformMode">
+                                <span class="radio-custom"></span>
+                                <i class="fas fa-comments"></i>
+                                Free-form Instructions
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Workflow Selection Section -->
+                    <div id="workflowSection" class="workflow-section">
+                        <div class="form-group full-width">
+                            <label for="workflowSelect">
+                                <i class="fas fa-sitemap"></i>
+                                Select Workflow Template
+                            </label>
+                            <select id="workflowSelect" name="workflowSelect" required>
+                                <option value="">-- Select a workflow --</option>
+                            </select>
+                            <div class="help-text">
+                                <i class="fas fa-info-circle"></i>
+                                Choose a pre-defined workflow template for automated testing
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Template Fields -->
+                        <div id="templateFields" class="template-fields">
+                            <!-- Template fields will be dynamically inserted here -->
+                        </div>
+
+                        <!-- Dependency Questions -->
+                        <div id="dependencyQuestions" class="dependency-questions" style="display: none;">
+                            <h3><i class="fas fa-question-circle"></i> Workflow Dependencies</h3>
+                            <!-- Dependency questions will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Free-form Instructions Section -->
+                    <div id="freeformSection" class="freeform-section" style="display: none;">
+                        <div class="form-group full-width">
+                            <label for="instructions">
+                                <i class="fas fa-comments"></i>
+                                Test Instructions
+                            </label>
+                            <textarea 
+                                id="instructions" 
+                                name="instructions" 
+                                placeholder="Describe what you want to test in natural language..." 
+                                rows="4"
+                            ></textarea>
+                            <div class="help-text">
+                                <i class="fas fa-lightbulb"></i>
+                                Example: "Login with admin credentials and verify that the dashboard loads correctly"
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Global Configuration -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clusterIp">
+                                <i class="fas fa-server"></i>
+                                <span id="clusterIpLabel">Cluster IP</span> <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="clusterIp" 
+                                name="clusterIp" 
+                                placeholder="192.168.1.100"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="baseUrl">
+                                <i class="fas fa-link"></i>
+                                <span id="baseUrlLabel">Base URL</span> <span class="optional">(optional)</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="baseUrl" 
+                                name="baseUrl" 
+                                placeholder="https://cluster.example.com"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Authentication -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">
+                                <i class="fas fa-user"></i>
+                                Username <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username" 
+                                placeholder="admin"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">
+                                <i class="fas fa-lock"></i>
+                                Password <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                placeholder="••••••••"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Browser Options -->
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="headless" name="headless" checked>
+                            <span class="checkbox-custom"></span>
+                            <i class="fas fa-eye-slash"></i>
+                            Run in headless mode (recommended for automated testing)
+                        </label>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Control Section -->
+            <section class="control-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-play-circle"></i> Test Execution</h2>
+                </div>
+
+                <div class="control-panel">
+                    <button id="executeBtn" class="btn btn-primary">
+                        <i class="fas fa-play"></i>
+                        Execute Test
+                    </button>
+                    
+                    <button id="pauseBtn" class="btn btn-warning" disabled>
+                        <i class="fas fa-pause"></i>
+                        Pause
+                    </button>
+                    
+                    <button id="resumeBtn" class="btn btn-success" disabled style="display: none;">
+                        <i class="fas fa-play"></i>
+                        Resume
+                    </button>
+                    
+                    <button id="stopBtn" class="btn btn-danger" disabled>
+                        <i class="fas fa-stop"></i>
+                        Stop
+                    </button>
+                </div>
+            </section>
+
+            <!-- Status Section -->
+            <section class="status-section" id="statusSection" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-info-circle"></i> Execution Status</h2>
+                </div>
+
+                <div class="status-panel">
+                    <div class="status-info">
+                        <div class="status-badge" id="statusBadge">
+                            <i class="fas fa-clock"></i>
+                            <span id="statusText">Initializing...</span>
+                        </div>
+                        <div class="execution-id">
+                            <i class="fas fa-tag"></i>
+                            Execution ID: <span id="executionId">-</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="progressPercent">0%</span>
+                            <span id="currentStep">Ready to start...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Test Results</h2>
+                </div>
+
+                <div class="results-panel" id="resultsPanel">
+                    <!-- Results will be populated here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>E2E Testing Agent - Intelligent test automation with natural language commands</p>
+        </footer>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

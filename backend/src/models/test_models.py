@@ -216,16 +216,6 @@ class ElementSelector:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass
-class ElementDetectionResult:
-    """Result of element detection attempt"""
-    found: bool
-    selector_used: Optional[ElementSelector] = None
-    fallback_attempted: bool = False
-    ai_assistance_used: bool = False
-    error: Optional[str] = None
-    detection_time: float = 0.0
-
-@dataclass
 class SelfHealingResult:
     """Result of self-healing attempt"""
     success: bool

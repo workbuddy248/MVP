@@ -274,9 +274,6 @@ def get_default_config() -> Dict[str, Any]:
             "test_generation": {
                 "temperature": 0.1
             },
-            "element_detection": {
-                "temperature": 0.2
-            },
             "self_healing": {
                 "temperature": 0.2
             }

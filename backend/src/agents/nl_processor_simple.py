@@ -4,9 +4,8 @@ Natural Language Processor Agent
 Converts natural language instructions into structured test requirements
 """
 
-import json
 import asyncio
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Any
 from ..core.azure_client import AzureOpenAIClient, PromptTemplates
 from ..models.test_models import UserIntent, IntentType, ComplexityLevel
 
@@ -50,7 +49,43 @@ class NLProcessor:
             )
             
             if response.success:
-                return response.content
+                # Validate and fix intent type for MVP
+                content = response.content
+                intent_type = content.get('intent_type', '')
+                
+                # MVP only supports login and get_fabric intents
+                supported_intents = ['login', 'get_fabric']
+                
+                # Get original instruction text for analysis
+                original_instructions = user_prompt.lower()
+                
+                # Strong fabric detection keywords
+                fabric_keywords = [
+                    'fabric', 'fabric details', 'fabric name', 'fabric management',
+                    'border', 'site', 'global/', 'bld1', 'bld2', 
+                    'view details', 'navigate to', 'show details', 'display',
+                    'border_l3vn_design_site', 'catalyst centre'
+                ]
+                
+                # Check if this should actually be get_fabric (even if AI said login)
+                fabric_detected = any(keyword in original_instructions for keyword in fabric_keywords)
+                
+                if fabric_detected and intent_type == 'login':
+                    print(f"🔄 [NLProcessor] Overriding intent '{intent_type}' to 'get_fabric' - fabric keywords detected in: {original_instructions}")
+                    content['intent_type'] = 'get_fabric'
+                elif intent_type not in supported_intents:
+                    # Auto-correct unsupported intents
+                    if fabric_detected:
+                        print(f"🔄 [NLProcessor] Auto-correcting intent '{intent_type}' to 'get_fabric' based on fabric keywords")
+                        content['intent_type'] = 'get_fabric'
+                    # Check if it's login-related (without fabric context)
+                    elif any(keyword in original_instructions for keyword in ['login', 'sign in', 'authenticate', 'credentials']) and not fabric_detected:
+                        print(f"🔄 [NLProcessor] Auto-correcting intent '{intent_type}' to 'login' based on authentication keywords")
+                        content['intent_type'] = 'login'
+                    else:
+                        raise Exception(f"Unsupported intent type '{intent_type}'. MVP only supports: {', '.join(supported_intents)}. Please modify your instructions to focus on login or fabric management tasks.")
+                
+                return content
             else:
                 raise Exception(f"Azure OpenAI processing failed: {response.error}")
                 
